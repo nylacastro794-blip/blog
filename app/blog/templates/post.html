@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<link rel="stylesheet" href="{{ url_for('blog.static', filename='css/main.css') }}">
+<body>
+<div>
+    <h1>欢迎来到我的网站</h1>
+    <h2>{{ post.title }}</h2>
+    <p>{{ post.content }}</p>
+    <img src="{{ url_for("blog.static",filename = "images/【哲风壁纸】墨侠客行-插画.jpg") }}" alt="{{ post.title }}">
+</div>
+</body>
+</html>
