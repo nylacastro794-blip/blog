@@ -24,5 +24,6 @@ def create_app():
     app.register_blueprint(blog.bp)
     #为了能让migrate能够识别到数据模型，需要在工厂函数中导入蓝图下的数据模型
     from app.blog import models
+    from app.admin import models
     return app
 
