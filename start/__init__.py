@@ -25,5 +25,9 @@ def create_app():
     #为了能让migrate能够识别到数据模型，需要在工厂函数中导入蓝图下的数据模型
     from app.blog import models
     from app.admin import models
+    # 注册根路由
+    app.add_url_rule('/',view_func=blog.index)
     return app
+
+
 

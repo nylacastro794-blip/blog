@@ -1,4 +1,274 @@
-div {
-    width: 400px;
-    margin: 100px auto;
+body {
+    background: #f8f8f8;
+    font-family: "Apple LiGothic Medium,Microsoft YaHei", "微软雅黑", "Arial", sans-serif;
+    font-size: 14px;
+    color: #4e4e4e;
+    -webkit-font-smoothing: antialiased;
+    -webkit-overflow-scrolling: touch;
+    line-height: 1.8em;
+    position: relative;
+    min-height: 100vh;
+}
+body::after {
+    content:"";
+    height: 60px;
+    display: block;
+}
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+    border-radius: 7px;
+
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(196,196,196,0.7);
+}
+.header {
+    width: 100%;
+    height: 60px;
+    position: relative;
+    background-color: #227eaa;
+    z-index: 1000;
+    margin-bottom: 15px;
+}
+.header * {
+    color: #FFF !important;
+}
+.header .logopic  img{
+    display: inline-block;
+    width: 50px;
+
+}
+.header .title{
+    display:inline-block;
+    padding: 16px 10px;
+}
+.header .layui-nav{
+    background: none;
+}
+.header .layui-nav .layui-this:after {
+    content: none;
+}
+.header .layui-nav .layui-nav-item a:hover {
+    color: #12caea !important;
+}
+@media screen and (min-width:1400px) {
+    .layui-container {
+        width: 1170px !important;
+    }
+}
+.footer {
+    width: 100%;
+    height: 25px;
+    padding: 16px 0;
+    color: #FFF;
+    background-color: #227eaa;
+    text-align: center;
+    margin-top: 15px;
+    position: absolute;
+    bottom: 0;
+}
+.side-search {
+    background-color: #fff;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    min-height:40px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
+}
+
+.side-search .layui-input {
+    width: 185px;
+    height: 30px;
+    margin-right: 10px;
+}
+/* --- 我的信息样式 --- */
+.side-avata {
+    background-color: #fff;
+    box-sizing: border-box;
+    padding: 10px 5px;
+    border-radius: 5px;
+    min-height: 100px;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.side-avata-bg {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+}
+
+.side-avata-bg img {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 150px;
+}
+
+#adminlogin {
+    display: inline-block;
+    position: absolute;
+    top: 112px;
+    left: 34%;
+}
+
+#adminlogin img {
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+    border: 4px solid rgba(220, 195, 195, 0.4);
+    transition: transform 0.75s;
+}
+
+#adminlogin :hover {
+    transform: rotate(360deg);
+}
+
+
+.side-avata .nickname {
+    margin-top: 50px;
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+}
+
+.side-avata .link {
+    text-align: center;
+}
+
+.side-avata .link a {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #666;
+}
+.side-categorys {
+    background-color: #fff;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    margin-top: 15px;
+    border-radius: 5px;
+    overflow: hidden;
+    min-height: 100px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.side-categorys ul {
+    overflow: hidden;
+}
+
+.side-categorys ul li {
+    padding: 5px 0;
+}
+
+.side-categorys ul span {
+    float: right;
+}
+.side-title {
+    border-bottom: 1px solid #eee;
+    width: 100%;
+    color: #666;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    font-weight: 400;
+}
+.side-newposts {
+    background-color: #fff;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    margin-top: 15px;
+    border-radius: 5px;
+    overflow: hidden;
+    border-radius: 5px;
+    min-height: 100px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
+}
+
+.side-newposts a {
+    word-break: break-all;
+}
+.side-tags {
+    background-color: #fff;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    overflow: hidden;
+    min-height: 100px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
+}
+
+.side-tags div a {
+    margin: 0 0 5px 0 !important;
+    white-space: nowrap; /*文本不换行*/
+    text-overflow: ellipsis;
+    overflow: hidden
+}
+.post-card {
+    background-color: #fff;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    min-height: 100px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+    word-break: break-all;
+}
+
+/*文章标题颜色*/
+.post-card h2 {
+    color: #227eaa;
+    padding: 10px 0;
+    word-break: break-all;
+}
+
+/*阅读全文链接颜色*/
+.post-card .detail, .category {
+    color: #227eaa;
+}
+
+.post-msg {
+    padding: 10px 5px 7px;
+}
+
+.post-msg > span {
+    padding-right: 25px;
+}
+
+.post-msg .post-info, i {
+    color: #b9a8a8;
+}
+
+.post-msg .author {
+    color: #909399;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  background: linear-gradient(
+    to bottom,
+    hsl(0deg, 100%, 50%, 0.4) 0%,
+    hsl(40deg, 100%, 50%) 20%,
+    hsl(80deg, 100%, 50%) 30%,
+    hsl(120deg, 100%, 50%) 40%,
+    hsl(180deg, 100%, 50%) 50%,
+    hsl(250deg, 100%, 50%) 80%,
+    hsl(320deg, 100%, 50%, 0.4) 100%
+  );
+  border-radius: 4px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    to bottom,
+    hsl(0deg, 100%, 50%, 0) 0%,
+    hsl(0deg, 100%, 100%, 0.9) 20%,
+    hsl(0deg, 100%, 100%, 0.9) 80%,
+    hsl(0deg, 100%, 50%, 0) 100%
+  );
+  border-radius: 100%;
 }

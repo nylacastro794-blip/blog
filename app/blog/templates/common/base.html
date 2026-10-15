@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for("blog.static",filename="layui/css/layui.css") }}">
+    <link rel="stylesheet" href="{{ url_for("blog.static",filename="css/main.css") }}">
+    <script src="{{ url_for("blog.static",filename="layui/layui.js") }}"></script>
+</head>
+<body>
+<script type="text/javascript" src="{{ url_for('blog.static', filename='js/canvas-nest.js') }}" color="18,214,120"
+    opacity="1" count="800"></script>
+{% block body %}
+
+    {% block header %}
+        <header class="header">
+            <div class="layui-container">
+                <a href="/" class="logopic">
+                    <img src="{{ url_for("blog.static",filename="imgs/logo.png") }}" alt="logo">
+                </a>
+                <a href="/" class="title">
+                    <h2>YL_blog</h2>
+                </a>
+                <span>天青色等烟雨，而我在等你</span>
+
+                <ul class="layui-nav layui-layout-right">
+
+                    <li class="layui-nav-item">
+                        <a href="/">首页</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="/">归档</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="/">笔记</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="/">留言</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="/">关于</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+    {% endblock %}
+    {% block content %}
+        <div class="layui-container">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md9">
+                    <div>
+                        <div class="post-card">
+                            <h2>Flask+Layui博客实战</h2>
+                            <p>主要特点 支持markdown 支持短笔记 响应式布局，移动终端显示友好 部署迁移便捷 二、开发环境
+                                Web框架：python flask 前端框架：layui 数据库：Mysql markdown支持: editor.md 代码高亮：
+                                highlight.js
+                                部署环境：centos 8.2 三、博客前台 （一）主体内容区 1. 首页 以列表的形式展示文章标题...
+                            </p>
+                            <div class="post-msg">
+                                <span>
+                                    <i class="layui-icon">&#xe612;</i>
+                                    <span class="author">云龙</span>
+                                </span>
+                                <span>
+                                    <i class="layui-icon">&#xe705;</i>
+                                    <a href="#" class="category">默认分类</a>
+                                </span>
+                                <span>
+                                    <i class="layui-icon">&#xe68d;</i>
+                                    <span class="post-info">2023-11-25</span>
+                                </span>
+                                <span>
+                                    <i class="layui-icon">&#xe62c;</i>
+                                    <span class="post-info">152</span>
+                                </span>
+                                <span>
+                                    <a href="#" class="detail">阅读全文</a>
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="post-card">
+                            <h2>Flask+Layui博客实战</h2>
+                            <p>主要特点 支持markdown 支持短笔记 响应式布局，移动终端显示友好 部署迁移便捷 二、开发环境
+                                Web框架：python flask 前端框架：layui 数据库：Mysql markdown支持: editor.md 代码高亮：
+                                highlight.js
+                                部署环境：centos 8.2 三、博客前台 （一）主体内容区 1. 首页 以列表的形式展示文章标题...
+                            </p>
+                            <div class="post-msg">
+                                <span>
+                                    <i class="layui-icon">&#xe612;</i>
+                                    <span class="author">云龙</span>
+                                </span>
+                                <span>
+                                    <i class="layui-icon">&#xe705;</i>
+                                    <a href="#" class="category">默认分类</a>
+                                </span>
+                                <span>
+                                    <i class="layui-icon">&#xe68d;</i>
+                                    <span class="post-info">2023-11-25</span>
+                                </span>
+                                <span>
+                                    <i class="layui-icon">&#xe62c;</i>
+                                    <span class="post-info">152</span>
+                                </span>
+                                <span>
+                                    <a href="#" class="detail">阅读全文</a>
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="post-card">
+                            <h2>Flask+Layui博客实战</h2>
+                            <p>主要特点 支持markdown 支持短笔记 响应式布局，移动终端显示友好 部署迁移便捷 二、开发环境
+                                Web框架：python flask 前端框架：layui 数据库：Mysql markdown支持: editor.md 代码高亮：
+                                highlight.js
+                                部署环境：centos 8.2 三、博客前台 （一）主体内容区 1. 首页 以列表的形式展示文章标题...
+                            </p>
+                            <div class="post-msg">
+                                <span>
+                                    <i class="layui-icon">&#xe612;</i>
+                                    <span class="author">云龙</span>
+                                </span>
+                                <span>
+                                    <i class="layui-icon">&#xe705;</i>
+                                    <a href="#" class="category">默认分类</a>
+                                </span>
+                                <span>
+                                    <i class="layui-icon">&#xe68d;</i>
+                                    <span class="post-info">2023-11-25</span>
+                                </span>
+                                <span>
+                                    <i class="layui-icon">&#xe62c;</i>
+                                    <span class="post-info">152</span>
+                                </span>
+                                <span>
+                                    <a href="#" class="detail">阅读全文</a>
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="post-card">
+                            <h2>Flask+Layui博客实战</h2>
+                            <p>主要特点 支持markdown 支持短笔记 响应式布局，移动终端显示友好 部署迁移便捷 二、开发环境
+                                Web框架：python flask 前端框架：layui 数据库：Mysql markdown支持: editor.md 代码高亮：
+                                highlight.js
+                                部署环境：centos 8.2 三、博客前台 （一）主体内容区 1. 首页 以列表的形式展示文章标题...
+                            </p>
+                            <div class="post-msg">
+                                <span>
+                                    <i class="layui-icon">&#xe612;</i>
+                                    <span class="author">云龙</span>
+                                </span>
+                                <span>
+                                    <i class="layui-icon">&#xe705;</i>
+                                    <a href="#" class="category">默认分类</a>
+                                </span>
+                                <span>
+                                    <i class="layui-icon">&#xe68d;</i>
+                                    <span class="post-info">2023-11-25</span>
+                                </span>
+                                <span>
+                                    <i class="layui-icon">&#xe62c;</i>
+                                    <span class="post-info">152</span>
+                                </span>
+                                <span>
+                                    <a href="#" class="detail">阅读全文</a>
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div>
+                        {% include "common/models/search.html" %}
+                        {% include "common/models/my_info.html" %}
+                        {% include "common/models/categorys.html" %}
+                        {% include "common/models/recent_posts.html" %}
+                        {% include "common/models/tags.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block footer %}
+        <footer class="footer">
+            <p>Copyright &nbsp;&copy;&nbsp; 2026&nbsp;&nbsp;云龙</p>
+
+        </footer>
+    {% endblock %}
+
+{% endblock %}
+</body>
+</html>
