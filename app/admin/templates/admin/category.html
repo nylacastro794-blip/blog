@@ -1,0 +1,75 @@
+{% extends "admin/common/base.html" %}
+
+
+{% block title %}
+    分类管理 - 云龙小站
+{% endblock %}
+
+{% block main_title %}
+    分类管理
+{% endblock %}
+
+
+{% block content %}
+    <div class="layui-container">
+        <button type="button" class="layui-btn" lay-on="prompt">新增分类</button>
+        <table class="layui-hide" id="ID-table-demo-data"></table>
+    </div>
+
+{% endblock %}
+{% block script %}
+    <script>
+        layui.use('table', function () {
+
+            let $ = layui.$;
+            let layer = layui.layer;
+            let util = layui.util;
+
+            util.on('lay-on', {
+                prompt: () => {
+                    layer.prompt({title: '请输入分类名称', maxlength: 20}, (value, index, elem) => {
+                        console.log(value)
+                        if (value !== '') {
+                            $.post('{{ url_for('admin.category_add') }}', {value: value},
+                                (res) => {
+                                    res === "success" ? location.reload() :layer.msg("分类已经存在",{
+                                        icon:7,
+                                        time: 1500,
+                                        anim:6
+
+
+                                    })
+                                }
+                            )
+                            layer.close(index);
+                        } else {
+                            layer.msg('请输入分类名称', {icon: 7, time: 1500, anim: 6});
+                        }
+                    })
+                }
+            })
+
+            let table = layui.table;
+            let inst = table.render({
+                elem: '#ID-table-demo-data',
+                url: '{{ url_for("admin.category_query") }}',
+                cols: [[ //标题栏
+                    {field: 'id', title: '序号', width: 120, sort: true},
+                    {field: 'name', title: '分类名称', width: 180},
+                    {field: 'add_time', title: '创建时间', minWidth: 120},
+                    {field: 'update_time', title: '修改时间', minwidth: 120},
+
+                ]],
+
+                //skin: 'line', // 表格风格
+                //even: true,
+                page: true, // 是否显示分页
+                limits: [15, 30, 45],
+                limit: 15 // 每页默认显示的数量
+            });
+        })
+
+        // 已知数据渲染
+
+    </script>
+{% endblock %}

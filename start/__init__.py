@@ -22,6 +22,8 @@ def create_app():
     """引入蓝图注册到app"""
     from app.blog import views as blog
     app.register_blueprint(blog.bp)
+    from app.admin import views as admin
+    app.register_blueprint(admin.bp)
     #为了能让migrate能够识别到数据模型，需要在工厂函数中导入蓝图下的数据模型
     from app.blog import models
     from app.admin import models

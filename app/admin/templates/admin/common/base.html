@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+            云龙小站后台
+        {% endblock %}
+    </title>
+    <link rel="stylesheet" href="{{ url_for("blog.static",filename="layui/css/layui.css") }}">
+    <link rel="stylesheet" href="{{ url_for("admin.static",filename="css/main.css") }}">
+    <script src="{{ url_for("blog.static",filename="layui/layui.js") }}"></script>
+</head>
+<body>
+<script type="text/javascript" src="{{ url_for('blog.static', filename='js/canvas-nest.js') }}" color="18,214,120"
+        opacity="1" count="800"></script>
+{% block body %}
+
+    {% block header %}
+        <header class="header">
+            <div class="layui-container">
+                <a href="/" class="logopic">
+                    <img src="{{ url_for("blog.static",filename="imgs/logo.png") }}" alt="logo">
+                </a>
+                <a href="/" class="title">
+                    <h2>
+                        {% block main_title %}
+                            云龙小站后台
+                        {% endblock %}
+                    </h2>
+                </a>
+
+
+                <ul class="layui-nav layui-layout-right">
+
+                    <li class="layui-nav-item">
+                        <a href="{{url_for("admin.post")}}">文章</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="/">笔记</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="{{url_for("admin.category")}}">分类</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="{{url_for("admin.tag")}}">标签</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="/">评论</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="/">留言</a>
+                    </li>
+                    <li class="layui-nav-item header_avata">
+                        <a href="javascript:;">
+                            <img src="{{ url_for('blog.static',filename='imgs/avata.jpg') }}" class="layui-nav-img">
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;">小站概要</a></dd>
+                            <dd><a href="javascript:;">系统设置</a></dd>
+                            <hr>
+                            <dd style="text-align: center;"><a href="">退出</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+    {% endblock %}
+    {% block content %}
+
+    {% endblock %}
+
+    {% block footer %}
+        <footer class="footer">
+            <p>Copyright &nbsp;&copy;&nbsp; 2026&nbsp;&nbsp;云龙</p>
+
+        </footer>
+    {% endblock %}
+    {% block script %}
+
+    {% endblock %}
+
+
+{% endblock %}
+</body>
+</html>
