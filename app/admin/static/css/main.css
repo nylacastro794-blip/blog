@@ -288,3 +288,62 @@ body::-webkit-scrollbar-thumb {
 .header .layui-nav .header_avata dl a:hover {
     background-color: #227eaa;
 }
+#editor{
+    margin: 0 20px 20px;
+}
+
+.ProseMirror{
+    font-size: 15px !important;
+}
+
+.toastui-editor-contents{
+    font-size: 15px !important;
+}
+.grid-demo {
+    background-color: #1e9fff;
+}
+.head_form .layui-btn{
+    display: flex;
+    justify-content: end;
+    flex-direction: column;
+}
+
+
+
+/* ------------ 头部表单 ------------ */
+.head_form .layui-row{
+    margin: 10px 20px;
+}
+
+.head_form .header_btn {
+    display: flex;
+    justify-content: end;
+    flex-direction: column
+}
+
+.head_form .layui-btn{
+    padding: 0 38px;
+}
+
+.head_form .layui-col-md8{
+    padding-left: 0;
+}
+.clickable-image {
+    height: 100px;
+    width: 100px;
+    margin: 8px;
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.clickable-image:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    border-color: #3498db;
+    background: linear-gradient(45deg, #3498db, #8e44ad);
+}
+
+.select_cover{
+    border: 2px solid #3498db;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3)
+}

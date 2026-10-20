@@ -29,7 +29,7 @@ class Post(BaseModel):
     cover = db.Column(db.String(512), comment='文章封面')
     contend_md = db.Column(db.Text, comment='markdown源文档格式')
     contend_html = db.Column(db.Text, comment='html内容')
-    read_count = db.Column(db.Integer, comment='阅读次数')
+    read_count = db.Column(db.Integer, comment='阅读次数',default = 0)
     draft_flag = db.Column(db.Boolean, default=False, comment='是否为草稿')
     # onupdate=datetime.now()每次更新文章时自动更新此字段的值为当前时间
     #设置表关联

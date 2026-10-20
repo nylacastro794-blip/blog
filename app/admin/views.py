@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, request, jsonify
-from app.blog.models import Category, Tag
+import json
+from flask import Blueprint, render_template, request, jsonify,url_for
+from app.blog.models import Category, Tag, Post,Attachment
 from start import db
+from start.settings import BASE_DIR
 
 bp = Blueprint('admin',__name__,url_prefix='/qd_admin',template_folder='templates',static_folder='static')
 
@@ -14,6 +16,31 @@ def login():
 @bp.route('/post')
 def post():
     return render_template('admin/post.html',**locals())
+@bp.route('/post_query')
+def post_query():
+    page = request.args.get('page', type=int, default=1)  # 当前页
+    limit = request.args.get('limit', type=int, default=10)  # 一页条数
+    post_pg = Post.query.paginate(page=page, per_page=limit)
+
+    post_list = []
+    for item in post_pg.items:
+        row = {
+            'id': item.id,
+            'title': item.title,
+            'read_count': item.read_count,
+            'category': item.category.name,
+            'add_time': item.add_time.strftime("%Y-%m-%d"),
+            'update_time': item.update_time.strftime("%Y-%m-%d")
+        }
+        post_list.append(row)
+
+    data = {
+        'code': 0,
+        'data': post_list,  # 实际数据
+        'count': post_pg.total,  # 数据总数
+        'msg': ''
+    }
+    return jsonify(data)
 @bp.route('/category')
 def category():
     return render_template('admin/category.html',**locals())
@@ -104,4 +131,53 @@ def tag_query():
         "data": category_list
     }
     return jsonify(data)
+@bp.route('/editor_post')
+def editor_post():
+    """
+    文章管理-编辑文章页
+    :return:
+    """
+    category_list = Category.query.all()
+    tag_list = Tag.query.all()
+    return render_template('admin/editor_post.html',**locals())
+@bp.route('/post_add', methods=['post'])
+def post_add():
+    """
+    文章管理-新增文章API
+    :return:
+    """
+    form_data = request.form
+    tags = json.loads(form_data['tags'])
+    tags_obj = [Tag.query.get(tag_id) for tag_id in list(tags.keys())]
+    post_obj = Post(
+        title=form_data['title'],
+        contend_md=form_data['markdown'],
+        contend_html=form_data['html'],
+        category_id=form_data['category'],
+        tags=tags_obj,
+        cover = form_data['cover'],
+    )
+    img_ids = [i['id'] for i in json.loads(form_data['img_list'])]
+    attachments = Attachment.query.filter(Attachment.id.in_(img_ids)).all()
+    post_obj.attachments.extend(attachments)
+
+    db.session.add(post_obj)
+    db.session.commit()
+    return 'success'
+
+@bp.route('/upload', methods=['post'])
+def upload():
+    """
+    文章管理-资源上传API
+    :return:
+    """
+    file = request.files.get('file')
+    name = request.form.get('name')
+    size = request.form.get('size')
+    file_path = f'app/blog/static/upload/{name}'
+    file.save(BASE_DIR / file_path)
+    attachment = Attachment(file_name=name, file_size=size, file_path=file_path)
+    db.session.add(attachment)
+    db.session.commit()
+    return {'id': attachment.id, 'url': url_for('blog.static', filename=f'upload/{name}')}
 

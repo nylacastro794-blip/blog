@@ -1,16 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<link rel="stylesheet" href="{{ url_for('blog.static', filename='css/main.css') }}">
-<body>
-<div>
-    <h1>欢迎来到我的网站</h1>
-    <h2>{{ post.title }}</h2>
-    <p>{{ post.content }}</p>
-    <img src="{{ url_for("blog.static",filename = "images/【哲风壁纸】墨侠客行-插画.jpg") }}" alt="{{ post.title }}">
-</div>
-</body>
-</html>
+{% extends "common/base.html" %}
+{% block content %}
+        <div class="layui-container">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md9">
+
+                </div>
+                <div class="layui-col-md3">
+                    <div>
+                        {% include "common/models/search.html" %}
+                        {% include "common/models/my_info.html" %}
+                        {% include "common/models/categorys.html" %}
+                        {% include "common/models/recent_posts.html" %}
+                        {% include "common/models/tags.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
