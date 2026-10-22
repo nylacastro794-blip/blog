@@ -1,6 +1,9 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+
+from utils.filters import FILTERS
+
 #实例化 solalchemy数据模型对象
 db = SQLAlchemy()
 #实例化数据迁移对象
@@ -29,6 +32,11 @@ def create_app():
     from app.admin import models
     # 注册根路由
     app.add_url_rule('/',view_func=blog.index)
+    '''在app中注册自定义过滤器'''
+
+    '''注册自定义过滤器'''
+    for key,value in FILTERS.items():
+        app.add_template_filter(value,key)
     return app
 
 

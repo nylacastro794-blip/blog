@@ -1,0 +1,243 @@
+{% extends 'common/base.html' %}
+{% extends "admin/common/base.html" %}
+{% block title %}
+    新建文章
+{% endblock %}
+
+{% block main_title %}
+    新建文章
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for("admin.static", filename='editor/tui-color-picker.min.css') }}"/>
+    <link rel="stylesheet"
+          href="{{ url_for("admin.static", filename='editor/toastui-editor-plugin-color-syntax.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for("admin.static", filename='editor/toastui-editor.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for("admin.static", filename='editor/prism.min.css') }}"/>
+    <link rel="stylesheet"
+          href="{{ url_for("admin.static", filename='editor/toastui-editor-plugin-code-syntax-highlight.min.css') }}"/>
+
+    <script src="{{ url_for("admin.static", filename='editor/toastui-editor-all.min.js') }}"></script>
+    <script src="{{ url_for("admin.static", filename='editor/zh-cn.js') }}"></script>
+    <script src="{{ url_for("admin.static", filename='editor/toastui-editor-plugin-code-syntax-highlight-all.min.js') }}"></script>
+    <script src="{{ url_for("admin.static", filename='editor/tui-color-picker.min.js') }}"></script>
+    <script src="{{ url_for("admin.static", filename='editor/toastui-editor-plugin-color-syntax.min.js') }}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+    <form action="" class="layui-form head_form" lay-filter="filter-test-layer">
+        <div class="layui-row layui-col-space15" style="margin: 10px 20px;">
+            <div class="layui-col-md9">
+                <input type="text" name="title" class="layui-input" lay-verify="required" placeholder="请输入文章标题"
+                       lay-affix="clear">
+                {#                <div class="grid-demo">文章标题</div>#}
+            </div>
+            <div class="layui-col-md1">
+                <select name="category">
+                    <option value="">选择分类</option>
+                    {% for category in category_list %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+
+
+                </select>
+            </div>
+
+            <div class="layui-col-md1 head_form">
+
+                <button type="button" class="layui-btn header-btn" lay-filter="saveDraft" lay-submit>保存草稿</button>
+            </div>
+            <div class="layui-col-md1 head_form">
+                <button type="button" class="layui-btn layui-bg-blue header_btn" lay-submit lay-on="test-page-custom">
+                    发布文章
+                </button>
+            </div>
+        </div>
+        </div>
+    </form>
+    <div id="editor"></div>
+    <script type="text/html" id="post-template">
+        <form class="layui-form" style="margin: 16px;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">标签(非必填)</label>
+                <div class="layui-input-block">
+                    {% for tag in tag_list %}
+                        <input type="checkbox" name="{{ tag.id }}" title="{{ tag.name }}">
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">封面选择：</label>
+                <div class="layui-input-block" id="img_list"></div>
+            </div>
+
+            <div style="display: flex;justify-content: flex-end; padding:0 30px 30px 0">
+                <button type="button" lay-filter="publish" lay-submit class="layui-btn layui-bg-blue">发布文章</button>
+            </div>
+        </form>
+    </script>
+    {#    <script>#}
+    {#        let editor = new toastui.Editor({#}
+    {#            el: document.querySelector('#editor'),#}
+    {#            initialEditType: 'markdown', // 初始编辑类型，这里是 Markdown#}
+    {#            previewStyle: 'vertical', // 预览样式，可以是 'tab', 'vertical'#}
+    {#            height: '300px' // 编辑器高度#}
+    {#        });#}
+    {#    </script>#}
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('blog.static', filename='js/activate-power-mode.js') }}"></script>
+    <script>
+        POWERMODE.colorful = true; // ture 为启用礼花特效
+        POWERMODE.shake = false; // false 为禁用震动特效
+        document.body.addEventListener('input', POWERMODE);
+    </script>
+    <script>
+
+        var plugin = toastui.Editor.plugin
+        var codeSyntaxHighlight = plugin.codeSyntaxHighlight
+        var colorSyntax = plugin.colorSyntax;
+        const Editor = toastui.Editor;
+        {#const {Editor} = toastui;#}
+        {#const {codeSyntaxHighlight} = Editor.plugin;#}
+        let editor = new toastui.Editor({
+            el: document.querySelector('#editor'),
+            initialEditType: 'markdown', // 初始编辑类型，这里是 Markdown
+            previewStyle: 'vertical', // 预览样式，可以是 'tab', 'vertical'
+            height: '700px', // 编辑器高度
+            language: "zh-CN",
+            hooks: {
+                addImageBlobHook: (blob, callback) => {
+                    console.log(blob)
+                    uploadImage(blob, function (imageUrl) {
+                        callback(imageUrl); // 将链接传递给编辑器
+                    }, function (error) {
+                        console.error('图片上传失败：', error);
+                    });
+                },
+            },
+            plugins: [codeSyntaxHighlight, colorSyntax]
+        });
+        let $ = layui.$
+        let img_list = []
+
+        function uploadImage(imageBlob, successCallback, errorCallback) {
+            let formData = new FormData();
+            formData.append('file', imageBlob);
+            formData.append('name', imageBlob.name === "image.png" ? imageBlob.lastModified + "png" : imageBlob.name);
+            formData.append('size', imageBlob.size.toString());
+            $.ajax({
+                url: '{{ url_for('admin.upload') }}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.url !== '') {
+                        img_list.push(data)
+                        successCallback(data.url);
+                    } else {
+                        errorCallback('图片上传失败');
+                    }
+                },
+                error: function () {
+                    errorCallback('图片上传失败');
+                }
+            });
+        }
+
+        layui.use(() => {
+            {#let $ = layui.$;#}
+            let layer = layui.layer;
+            let util = layui.util;
+            let form = layui.form;
+            let cover = ''
+
+            util.on('lay-on', {
+                'test-page-custom': () => {
+                    // 判断是否输入了文章标题
+                    let title = form.val('filter-test-layer').title
+                    if (title.trim() === '') {
+                        layer.msg('请输入文章标题', {icon: 7, time: 1500, anim: 6});
+                        return;
+                    }
+                    layer.open({
+                        type: 1,
+                        area: ['600px', 'auto'],
+                        resize: false,
+                        shadeClose: true,
+                        title: '发布文章',
+                        offset: '100px',
+                        content: $('#post-template').html(),
+                        success: function (layero, index, that) {
+                            // 弹出层渲染已上传的图片
+                            const imageContainer = $('#img_list')
+                            img_list.forEach((img, index) => {
+                                const imgElement = $('<img alt="" src="" >').attr('src', img.url).addClass('clickable-image')
+                                imageContainer.append(imgElement)
+
+                                // 重新设置弹窗高度
+                                let box_height = Math.ceil(img_list.length / 3) * 100 + 250
+                                console.log(Math.ceil(img_list.length / 3))
+                                layero.css('height', `${box_height}px`)
+
+                                // 监听图片点击事件
+                                imgElement.click(() => {
+                                    imgElement.siblings('img').removeClass('select_cover')
+                                    imgElement.addClass('select_cover');
+                                    cover = img.url  // 点击哪个图片就做为封面图
+                                })
+
+
+                            })
+
+
+                            // 对弹层中的表单进行初始化渲染
+                            form.render();
+                            form.on('submit(publish)', function (data) {
+                                console.log(data)
+                                let tags = data.field;
+                                let category = form.val('filter-test-layer').category || "{{ category_list[0].id }}";
+                                let html = editor.getHTML()
+                                let markdown = editor.getMarkdown()
+                                let form_data = {
+                                    title: title,
+                                    category: category,
+                                    tags: JSON.stringify(tags),
+                                    html: html,
+                                    markdown: markdown,
+                                    img_list: JSON.stringify(img_list),  // 新增
+                                    cover: cover  // 新增封面图字段
+                                }
+                                console.log(form_data)
+                                $.post('{{ url_for('admin.post_add') }}', form_data, (res) => {
+                                        if (res === 'success') {
+                                            layer.close(1, () => {
+                                                layer.msg('保存成功', {icon: 1, time: 1500}, () => {
+                                                    window.location.href = '{{ url_for('admin.post') }}';
+                                                });
+                                            });
+                                        }
+                                    }
+                                )
+                                return false; // 阻止默认 form 跳转
+                            });
+                        }
+                    })
+                }
+            })
+
+
+            // 监听保存草稿按钮点击事件
+            form.on('submit(saveDraft)', (data) => {
+                console.log('保存草稿')
+                return false;   // 阻止表单跳转
+            })
+        })
+
+
+    </script>
+{% endblock %}

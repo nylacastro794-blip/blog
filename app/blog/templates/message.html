@@ -1,0 +1,85 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+    <div class="layui-container">
+        <div class="comment">
+            <form class="comment-edit layui-form">
+                <h3 class="comment-title">茫茫网络一线缘&nbsp;&nbsp;<span style="font-size: 19px">😎</span>&nbsp;&nbsp;&nbsp;你的留言有点甜
+                </h3>
+                <div class="layui-form" id="comment_board">
+                    <div class="layui-form-item ">
+            <textarea id="cmt_content" class="layui-textarea" rows="5" cols="30" placeholder="请输入评论内容 (｡･∀･)ﾉﾞ"
+                      name="content" lay-verify="required"></textarea>
+                    </div>
+                    <div class="layui-form-item layui-row layui-col-space15">
+                        <div class="layui-row layui-col-md6">
+                            <input type="text" id="cmt_author" class="layui-input" placeholder="请输入你的名字"
+                                   name="name"
+                                   lay-verify="required">
+                        </div>
+                        <div class="layui-row layui-col-md6">
+                            <input type="text" id="cmt_email" class="layui-input" placeholder="请输入你的邮箱"
+                                   name="email"
+                                   lay-verify="email|required"
+                            >
+                        </div>
+                    </div>
+                    <div class="comment-send">
+                        <h3>已有留言<span style="font-size: 14px; color: #909399"> {{ messages | length }} 条</span>
+                        </h3>
+                        <button type="button" lay-filter="publish1" lay-submit class="layui-btn layui-bg-blue">发布
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="comment-list">
+            <ul class="message-item">
+                {% for message in messages %}
+                    <li class="layui-row">
+                        <div class="layui-col-md1">
+                            <img src="{{ url_for('blog.static',filename='imgs/dog.jpg') }}" alt="">
+                        </div>
+                        <div class="layui-col-md11">
+                            <strong>{{ message.visitor_name }}</strong>
+                            <div style="margin: 10px 0">
+                                <p>{{ message.content }}</p>
+                            </div>
+                            <div class="list_bottom">
+                                <span>{{ message.add_time | strftime_comment }}</span>
+                                <span class="layui-badge-rim">{{ message.visitor_address | address }}</span>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        layui.use(() => {
+            let form = layui.form;
+            let $ = layui.$
+            form.on('submit(publish1)', (data) => {
+                let field = data.field
+                let form_data = {
+                    comment: field.content,
+                    name: field.name,
+                    email: field.email
+                }
+                $.post('{{ url_for('blog.message_add') }}', form_data, (res) => {
+                    if (res === 'success') {
+                        layer.msg('保存成功', {icon: 1, time: 1500}, () => {
+                            location.reload()
+                            return false;
+                        });
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock %}

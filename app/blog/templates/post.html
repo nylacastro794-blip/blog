@@ -1,19 +1,97 @@
 {% extends "common/base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for("blog.static", filename='prism/themes/prism-one-dark.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for("blog.static", filename='prism/prism.css') }}"/>
+    <link rel="stylesheet"
+          href="{{ url_for("blog.static", filename='prism/plugins/line-numbers/prism-line-numbers.min.css') }}"/>
+    <script src="{{ url_for("blog.static", filename='prism/prism.js') }}"></script>
+    <script src="{{ url_for("blog.static", filename='prism/plugins/line-numbers/prism-line-numbers.min.js') }}"></script>
+
+{% endblock %}
 {% block content %}
-        <div class="layui-container">
-            <div class="layui-row layui-col-space15">
-                <div class="layui-col-md9">
+    <div class="layui-container">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md9">
+                <div class="post-card">
+                    <div class="post-title">
+                        <h1>{{ post.title }}</h1>
+                    </div>
+                    <div class="post-mag">
+                            <span>
+                                <i class="layui-icon">&#xe612;</i>
+                                <span>云龙</span>
+                            </span><span>
+                                <i class="layui-icon">&#xe705;</i>
+                                <span>{{ post.category.name }}</span>
+                            </span><span>
+                                <i class="layui-icon">&#xe68d;</i>
+                                <span>{{ post.add_time | strftime }}</span>
+                            </span><span>
+                                <i class="layui-icon">&#xe62c;</i>
+                                <span>{{ post.read_count }}</span>
+                            </span>
+
+
+                        <span>
+                                {% if post.tags %}
+                                    {% for tag in post.tags %}
+                                        <a class='layui-btn layui-btn-xs layui-btn-primary' href='#'
+                                           style="color: {{ tag.color }}; margin-left: 4px; margin-bottom:2px">{{ tag.name }}</a>
+                                    {% endfor %}
+
+                                {% endif %}
+                            </span>
+
+                        <div class="post-content">
+                            {{ post.contend_html | safe }}
+                        </div>
+                        <div class="post-tag">
+                            <div>
+                                {% if prev_post %}
+                                    <a href="{{ url_for('blog.post',post_id=prev_post.id) }}">上一篇：{{ prev_post.title }}</a>
+                                {% else %}
+                                    <span>上一篇：没有上一篇了~</span>
+                                {% endif %}
+                            </div>
+                            <div>
+                                {% if next_post %}
+                                    <a href="{{ url_for('blog.post',post_id=next_post.id) }}">下一篇：{{ next_post.title }}</a>
+                                {% else %}
+                                    <span>下一篇：没有下一篇了~</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+
+            {% include 'common/models/comment_edit.html'%}
+            {% include 'common/models/comment_list.html'%}
 
                 </div>
-                <div class="layui-col-md3">
-                    <div>
-                        {% include "common/models/search.html" %}
-                        {% include "common/models/my_info.html" %}
-                        {% include "common/models/categorys.html" %}
-                        {% include "common/models/recent_posts.html" %}
-                        {% include "common/models/tags.html" %}
-                    </div>
+            </div>
+            <div class="layui-col-md3">
+                <div>
+                    {% include "common/models/search.html" %}
+                    {% include "common/models/my_info.html" %}
+                    {% include "common/models/categorys.html" %}
+                    {% include "common/models/recent_posts.html" %}
+                    {% include "common/models/tags.html" %}
                 </div>
             </div>
         </div>
-    {% endblock %}
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        layui.jquery('pre').addClass('line-numbers')  // 代码块行号样式属性增加
+
+        // 自定义固定条
+        layui.use(function () {
+            let util = layui.util;
+            util.fixbar({
+                bgcolor: '#b0bbc0',
+            });
+        });
+    </script>
+{% endblock %}

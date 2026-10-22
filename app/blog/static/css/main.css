@@ -272,3 +272,218 @@ body::-webkit-scrollbar-thumb {
   );
   border-radius: 100%;
 }
+/* ------------ 文章详情页内容样式 ------------ */
+/*正文页标题*/
+.post-title {
+    padding: 10px 5px;
+}
+
+/*正文页文章正文部分*/
+.post-content {
+    padding: 10px 5px;
+    font-size: 15px;
+}
+
+/*恢复默认ul,ol样式（layui默认将该样式清除了）*/
+.post-content ul, .post-content ol {
+    display: block;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+}
+
+/*显示li小圆点（layui默认将该样式清除了）*/
+.post-content li {
+    list-style: unset;
+}
+
+/*正文页文章正文图片样式*/
+.post-content img {
+    max-width: 100%;
+    max-height: 100%;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+
+/*正文页文章正文各级标题样式*/
+.post-content h1, .post-content h3 {
+    line-height: 2.5em;
+    color: #404040;
+    word-break: break-all;
+}
+
+.post-content h3 {
+    font-size: 20px;
+}
+
+.post-content h4 {
+    line-height: 2em;
+    font-size: 17px;
+    color: #1E9FFF;
+}
+
+.post-content h2 {
+    font-size: 24px;
+    line-height: 2em;
+    margin: 18px 0;
+    color: #404040;
+    border-bottom: 1px solid rgb(216, 222, 228);
+    padding: 0;
+}
+
+.post-content h5, .post-content h6 {
+    line-height: 2em;
+    font-size: 15px;
+    color: #f6886d;
+}
+
+.post-content a {
+    color: #227eaa;
+}
+
+/* 引用标签css */
+.post-content blockquote {
+    padding: 0 1em;
+    color: rgb(101, 109, 118);
+    border-left: 0.25em solid rgb(208, 215, 222);
+    margin-bottom: 16px;
+}
+.layui-fixbar {
+    bottom: 60px !important;
+}
+/* 文章底部 */
+.post-tag {
+    display: flex;
+    align-items: center;
+}
+
+.post-tag div {
+    margin-right: 60px;
+    padding: 8px 0;
+}
+
+.post-tag a {
+    color: rgba(40, 157, 255, 0.81);
+}
+
+.post-tag span {
+    color: #b9a8a8;
+}
+/* ------------ 评论发送内容样式 ------------ */
+.comment {
+    background-color: #fff;
+    box-sizing: border-box;
+    padding: 5px 20px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    min-height: 100px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+/*留言页标题样式*/
+.comment .comment-title {
+    text-align: center;
+}
+
+/*留言内容样式*/
+.comment .comment-edit {
+    padding: 0 18px;
+    border-radius: 8px;
+}
+
+.comment .comment-edit h3 {
+    margin: 20px 0;
+    font-weight: 500;
+}
+
+/*留言列表底部间距*/
+.comment .comment-item li {
+    margin-bottom: 20px;
+}
+
+
+.comment-send {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.comment-send h3 {
+    position: relative;
+    padding-left: 1.2em;
+    font-size: 15px;
+}
+
+.comment-send h3:before {
+    position: absolute;
+    content: '';
+    width: 4px;
+    background: #627bf5;
+    top: 10%;
+    left: 2px;
+    bottom: 10%;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px -1px #627bf5;
+}
+/* ------------ 评论发送内容样式 ------------ */
+.comment, .comment-list {
+    background-color: #fff;
+    box-sizing: border-box;
+    padding: 5px 20px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    min-height: 100px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ------------ 评论列表样式 ------------ */
+.comment-list .message-item {
+    margin: 15px 0;
+}
+
+.comment-list .message-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    padding: 3px;
+    border: 1px solid #dfedff;
+}
+
+.comment-list .list_bottom {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comment-list .list_bottom span {
+    margin-right: 12px;
+    color: #999;
+}
+
+.comment-list .message-item li{
+    margin-bottom: 20px;
+}
+
+/* ------------ 归档页面样式 ------------ */
+.record-list {
+    background-color: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.record-list p a {
+    margin: 10px 5px;
+    font-weight: 550;
+    font-size: 16px;
+}
+
+.record-list li {
+    margin: 5px 25px;
+}
+
+.record-list li a {
+    color: #227eaa;
+}
