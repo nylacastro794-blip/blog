@@ -1,0 +1,54 @@
+{% extends "admin/common/base.html" %}
+
+
+{% block title %}
+    笔记管理 - 云龙小站
+{% endblock %}
+
+{% block main_title %}
+    笔记管理
+{% endblock %}
+
+
+{% block content %}
+    <div class="layui-container">
+        <a class="button layui-btn" href="{{ url_for('admin.editor_note') }}">新增笔记</a>
+        <table class="layui-hide" id="ID-table-demo-data"></table>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        layui.use('table', function () {
+            let table = layui.table;
+            let $ = layui.$;
+            let layer = layui.layer;
+            let util = layui.util;
+
+
+
+            // 已知数据渲染
+            let inst = table.render({
+                elem: '#ID-table-demo-data',
+                url: '{{ url_for("admin.note_query") }}',
+                cols: [[ //标题栏
+                    {field: 'id', title: '序号', width: 120, sort: true},
+                    {field: 'title', title: '笔记标题', width: '',
+                    templet: (d) => {
+                            return '<div><a href="/blog/post/' + d.id + '" class="layui-table-link">' + d.title + '</a></div>'
+                        }
+                    },
+                    {field: 'read_count', title: '阅读次数', width: 180},
+                    {field: 'category', title: '笔记分类', width: 180},
+                    {field: 'add_time', title: '创建时间', width: 180},
+                    {field: 'update_time', title: '修改时间', width: 180}
+                ]],
+                page: true, // 是否显示分页
+                limits: [10, 20, 30],
+                limit: 10 // 每页默认显示的数量
+            });
+
+            inst.resize();
+            inst.setColsWidth();
+        });
+    </script>
+{% endblock %}

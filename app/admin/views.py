@@ -1,6 +1,7 @@
 import json
 from flask import Blueprint, render_template, request, jsonify,url_for
-from app.blog.models import Category, Tag, Post,Attachment
+from app.admin.models import BlogInfo
+from app.blog.models import Category, Tag, Post,Attachment,Note
 from start import db
 from start.settings import BASE_DIR
 
@@ -180,4 +181,98 @@ def upload():
     db.session.add(attachment)
     db.session.commit()
     return {'id': attachment.id, 'url': url_for('blog.static', filename=f'upload/{name}')}
+@bp.route('/about')
+def about():
+    """
+    关于管理-首页
+    :return:
+    """
+    blog_info = BlogInfo.query.first()
+    if blog_info:
+        about_me_mk = blog_info.about_me_mk
+        about_me_html= blog_info.about_me_html
+    return render_template('admin/about.html', **locals())
+@bp.route('/about_add', methods=['post'])
+def about_add():
+    """
+    关于管理-添加API
+    :return:
+    """
+    form_data = request.form
+    content_md = form_data['markdown']
+    content_html = form_data['html']
+    # 查询是否已存在记录
+    existing_record = BlogInfo.query.first()
+
+    if existing_record:
+        existing_record.about_me_mk = content_md
+        existing_record.about_me_html = content_html
+    else:
+        about_content = BlogInfo(about_me_mk=content_md, about_me_html=content_html)
+        db.session.add(about_content)
+
+    db.session.commit()
+    return 'success'
+@bp.route('/note')
+def note():
+    """
+    笔记管理-首页
+    :return:
+    """
+    return render_template('admin/note.html',**locals())
+@bp.route('/editor_note')
+def editor_note():
+    """
+    笔记管理-编辑笔记页
+    :return:
+    """
+    category_list = Category.query.all()
+    tag_list = Tag.query.all()
+    return render_template('admin/editor_note.html', **locals())
+@bp.route('/note_query')
+def note_query():
+    """
+    笔记管理-查询笔记API
+    :return:
+    """
+    page = request.args.get('page', type=int, default=1)  # 当前页
+    limit = request.args.get('limit', type=int, default=10)  # 一页条数
+    note_pg = Note.query.paginate(page=page, per_page=limit)
+
+    note_list = []
+    for item in note_pg.items:
+        row = {
+            'id': item.id,
+            'title': item.title,
+            'read_count': item.read_count,
+            'category': item.category.name,
+            'add_time': item.add_time.strftime("%Y-%m-%d"),
+            'update_time': item.update_time.strftime("%Y-%m-%d")
+        }
+        note_list.append(row)
+
+    data = {
+        'code': 0,
+        'data': note_list,  # 实际数据
+        'count': note_pg.total,  # 数据总数
+        'msg': ''
+    }
+    return jsonify(data)
+@bp.route('/note_add', methods=['post'])
+def note_add():
+    form_data = request.form
+    tags = json.loads(form_data['tags'])
+    tags_obj = [Tag.query.get(tag_id) for tag_id in list(tags.keys())]
+
+    note_obj = Note(
+        title=form_data['title'],
+        contend_md=form_data['markdown'],
+        contend_html=form_data['html'],
+        category_id=form_data['category'],
+        tags=tags_obj
+    )
+
+    db.session.add(note_obj)
+    db.session.commit()
+    return 'success'
 

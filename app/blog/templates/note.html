@@ -1,1 +1,70 @@
 {% extends 'common/base.html' %}
+
+{% block content %}
+    <div class="layui-container">
+        <div class="layui-row layui-col-space15">
+
+            <div class="layui-col-md9">
+                {% for note in note_pg %}
+                    <div class="post-card">
+                        <h2>{{ note.title }}</h2>
+                        <div class="post-content">{{ note.contend_html | safe }}</div>
+                        <div class="post-msg">
+
+                            <span>
+                                <i class="layui-icon">&#xe612;</i>
+                                <span class="author">云龙</span>
+                            </span>
+                            <span>
+                                <i class="layui-icon">&#xe705;</i>
+                                <a href="#" class="category">{{ note.category.name }}</a>
+                            </span>
+                            <span>
+                                <i class="layui-icon">&#xe68d;</i>
+                                <span class="post-info">{{ note.add_time | strftime_comment }}</span>
+                            </span>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            <div id="demo-laypage-theme-1"></div>
+            </div>
+
+            <div class="layui-col-md3">
+                {% include 'common/sidebar.html' %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        // 代码块行号展示
+        layui.jquery('pre').addClass("line-numbers").css("white-space", "pre-wrap");
+        layui.use(function () {
+            let util = layui.util;
+            let laypage = layui.laypage;
+            // 自定义固定条
+            util.fixbar({
+                bgcolor: '#b0bbc0',
+            });
+
+            laypage.render({
+                elem: 'demo-laypage-theme-1',
+                curr: '{{ curr }}',
+                count: '{{ count }}',
+                theme: '#1E9FFF',
+                limit: 5,
+                jump: (obj, first) => {
+                    // 首次不执行
+                    if (!first) {
+                        window.location.href = `/blog/note/${obj.curr}`
+                        console.log(obj.curr)
+                        console.log(obj.limit)
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

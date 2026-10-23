@@ -1,1 +1,72 @@
-{%extends "common/base.html" %}
+{% extends "common/base.html" %}
+{% block content %}
+    <div class="layui-container">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md9">
+                <div>
+                    {% for post in post_pg %}
+                        <div class="post-card">
+                            <h2><a style="color:#227eaa"
+                                   href="{{ url_for('blog.post',post_id=post.id) }}"
+                                   target="_blank">{{ post.title }}</a></h2>
+
+                            <div class="clamp-text">{{ post.contend_html|remove_html_tags | truncate(200) }}</div>
+                            <div class="post-msg">
+                                <span>
+                            <i class="layui-icon">&#xe612;</i>
+                            <span class="author">云龙</span>
+                        </span>
+                                <span>
+                            <i class="layui-icon">&#xe705;</i>
+                            <a href="#" class="category">{{ post.category.name }}</a>
+                        </span>
+                                <span>
+                            <i class="layui-icon">&#xe68d;</i>
+                            <span class="post-info">{{ post.add_time | strftime_comment }}</span>
+                        </span>
+                                <span>
+                            <i class="layui-icon">&#xe62c;</i>
+                            <span class="post-info">{{ post.read_count }}</span>
+                        </span>
+                                <span>
+                            <a href="{{ url_for('blog.post', post_id=post.id) }}" class="detail"
+                               target="_blank">阅读全文</a>
+                        </span>
+                            </div>
+
+                        </div>
+                    {% endfor %}
+                    <div id="demo-laypage-theme-1"></div>
+
+                </div>
+            </div>
+
+            <div class="layui-col-md3">
+                {% include 'common/sidebar.html' %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        layui.use(() => {
+            var laypage = layui.laypage;
+            laypage.render({
+                elem: 'demo-laypage-theme-1',
+                count: '{{count}}',
+                curr: '{{page}}',
+                limit: 5,
+                theme: '#1E9FFF',
+                jump: function (obj, first) {
+                    // 首页不执行
+                    if (!first) {
+                        console.log(obj)
+                        window.location.href = `/blog/page/${obj.curr}`
+                    }
+
+                }
+            });
+        })
+    </script>
+{% endblock %}

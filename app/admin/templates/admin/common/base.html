@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer"/>
     <title>
         {% block title %}
             云龙小站后台
@@ -36,22 +37,25 @@
                 <ul class="layui-nav layui-layout-right">
 
                     <li class="layui-nav-item">
-                        <a href="{{url_for("admin.post")}}">文章</a>
+                        <a href="{{ url_for("admin.post") }}">文章</a>
                     </li>
                     <li class="layui-nav-item">
-                        <a href="/">笔记</a>
+                        <a href="{{ url_for('admin.note') }}">笔记</a>
                     </li>
                     <li class="layui-nav-item">
-                        <a href="{{url_for("admin.category")}}">分类</a>
+                        <a href="{{ url_for("admin.category") }}">分类</a>
                     </li>
                     <li class="layui-nav-item">
-                        <a href="{{url_for("admin.tag")}}">标签</a>
+                        <a href="{{ url_for("admin.tag") }}">标签</a>
                     </li>
                     <li class="layui-nav-item">
                         <a href="/">评论</a>
                     </li>
                     <li class="layui-nav-item">
                         <a href="/">留言</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="{{ url_for("admin.about") }}">关于</a>
                     </li>
                     <li class="layui-nav-item header_avata">
                         <a href="javascript:;">

@@ -1,0 +1,131 @@
+{% extends "admin/common/base.html" %}
+{% block title %}
+    关于文章
+{% endblock %}
+
+{% block main_title %}
+    关于我
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for("admin.static", filename='editor/tui-color-picker.min.css') }}"/>
+    <link rel="stylesheet"
+          href="{{ url_for("admin.static", filename='editor/toastui-editor-plugin-color-syntax.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for("admin.static", filename='editor/toastui-editor.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for("admin.static", filename='editor/prism.min.css') }}"/>
+    <link rel="stylesheet"
+          href="{{ url_for("admin.static", filename='editor/toastui-editor-plugin-code-syntax-highlight.min.css') }}"/>
+
+    <script src="{{ url_for("admin.static", filename='editor/toastui-editor-all.min.js') }}"></script>
+    <script src="{{ url_for("admin.static", filename='editor/zh-cn.js') }}"></script>
+    <script src="{{ url_for("admin.static", filename='editor/toastui-editor-plugin-code-syntax-highlight-all.min.js') }}"></script>
+    <script src="{{ url_for("admin.static", filename='editor/tui-color-picker.min.js') }}"></script>
+    <script src="{{ url_for("admin.static", filename='editor/toastui-editor-plugin-color-syntax.min.js') }}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+
+    <div id="editor"></div>
+    <div class="about-bottom">
+        <button type="button" id='post_about' class='layui-btn layui-bg-blue'>发布关于</button>
+    </div>
+
+    {#    <script>#}
+    {#        let editor = new toastui.Editor({#}
+    {#            el: document.querySelector('#editor'),#}
+    {#            initialEditType: 'markdown', // 初始编辑类型，这里是 Markdown#}
+    {#            previewStyle: 'vertical', // 预览样式，可以是 'tab', 'vertical'#}
+    {#            height: '300px' // 编辑器高度#}
+    {#        });#}
+    {#    </script>#}
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('blog.static', filename='js/activate-power-mode.js') }}"></script>
+    <script>
+        POWERMODE.colorful = true; // ture 为启用礼花特效
+        POWERMODE.shake = false; // false 为禁用震动特效
+        document.body.addEventListener('input', POWERMODE);
+    </script>
+    <script>
+
+        var plugin = toastui.Editor.plugin
+        var codeSyntaxHighlight = plugin.codeSyntaxHighlight
+        var colorSyntax = plugin.colorSyntax;
+        const Editor = toastui.Editor;
+        {#const {Editor} = toastui;#}
+        {#const {codeSyntaxHighlight} = Editor.plugin;#}
+        let editor = new toastui.Editor({
+            el: document.querySelector('#editor'),
+            initialEditType: 'markdown', // 初始编辑类型，这里是 Markdown
+            previewStyle: 'vertical', // 预览样式，可以是 'tab', 'vertical'
+            height: '700px', // 编辑器高度
+            initialValue: {{ about_me_mk | tojson }}, // 编辑器高度
+            language: "zh-CN",
+            hooks: {
+                addImageBlobHook: (blob, callback) => {
+                    console.log(blob)
+                    uploadImage(blob, function (imageUrl) {
+                        callback(imageUrl); // 将链接传递给编辑器
+                    }, function (error) {
+                        console.error('图片上传失败：', error);
+                    });
+                },
+            },
+            plugins: [codeSyntaxHighlight, colorSyntax]
+        });
+        let $ = layui.$
+        let img_list = []
+
+        function uploadImage(imageBlob, successCallback, errorCallback) {
+            let formData = new FormData();
+            formData.append('file', imageBlob);
+            formData.append('name', imageBlob.name === "image.png" ? imageBlob.lastModified + "png" : imageBlob.name);
+            formData.append('size', imageBlob.size.toString());
+            $.ajax({
+                url: '{{ url_for('admin.upload') }}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.url !== '') {
+                        img_list.push(data)
+                        successCallback(data.url);
+                    } else {
+                        errorCallback('图片上传失败');
+                    }
+                },
+                error: function () {
+                    errorCallback('图片上传失败');
+                }
+            });
+        }
+
+        {#layui.use(() => {#}
+        {##}
+        $('#post_about').click(() => {
+            let html = editor.getHTML()
+            let markdown = editor.getMarkdown()
+
+            let form_data = {
+                html: html,
+                markdown: markdown
+            }
+            $.post('{{ url_for('admin.about_add') }}', form_data, (res) => {
+                    if (res === 'success') {
+
+                        layer.msg('保存成功', {icon: 1, time: 1500}, () => {
+                            window.location.href = '{{ url_for('admin.about') }}';
+                        });
+
+                    }
+                }
+            )
+        })
+
+
+    </script>
+{% endblock %}

@@ -1,15 +1,18 @@
 from flask import Blueprint, render_template, request
-from app.blog.models import Post, Comment, Message
+from app.blog.models import Post, Comment, Message,Note
 from start import db
+from ..admin.models import BlogInfo
 from .static.ip2region import search_with_file
 
 bp = Blueprint("blog", __name__, url_prefix="/blog", static_folder="static", template_folder="templates")
 
 
 # 因为在初始化文件中注册了首页路由，这里的路由规则就不适用了
-# @bp.route("/index")
-def index():
-    title = "yunlong的小站"
+@bp.route("/page/<int:page>")
+def index(page=1):
+    title = "yunlong的小站",
+    post_pg = Post.query.paginate(page=page, per_page=5)
+    count = post_pg.total
     return render_template("index.html", **locals())
 
 
@@ -124,13 +127,15 @@ def record():
     return render_template('record.html', **locals())
 
 
-@bp.route('/note')
-def note():
+@bp.route('/note/<int:curr>')
+def note(curr=1):
     """
-    笔记页面
+    笔记管理-查询笔记API
     :return:
     """
-    return render_template('note.html',**locals())
+    note_pg = Note.query.paginate(page=curr, per_page=5)
+    count = note_pg.total
+    return render_template('note.html', **locals())
 
 
 @bp.route('/message')
@@ -163,4 +168,7 @@ def about():
     关于页面
     :return:
     """
+    blog_info = BlogInfo.query.first()
+    about_me_html = blog_info.about_me_html if blog_info else ''
     return render_template('about.html',**locals())
+
