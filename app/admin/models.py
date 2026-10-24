@@ -1,6 +1,6 @@
 from start import db
 from datetime import datetime
-
+from flask_login import  UserMixin
 
 class BaseModel(db.Model):
     """数据表基类模型"""
@@ -11,7 +11,7 @@ class BaseModel(db.Model):
     update_time = db.Column(db.DateTime, default=datetime.now(), onupdate=datetime.now(), comment='更新时间')
 
 
-class User(BaseModel):
+class User(UserMixin,BaseModel):
     __tablename__ = "user_db"
     username = db.Column(db.String(64), unique=True, nullable=False, comment="用户名")
     password = db.Column(db.String(128), comment="用户密码")

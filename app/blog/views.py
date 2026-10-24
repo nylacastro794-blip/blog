@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
 from app.blog.models import Post, Comment, Message,Note
+from sqlalchemy import or_
 from start import db
 from ..admin.models import BlogInfo
 from .static.ip2region import search_with_file
@@ -135,6 +136,7 @@ def note(curr=1):
     """
     note_pg = Note.query.paginate(page=curr, per_page=5)
     count = note_pg.total
+    current_route = 'note'
     return render_template('note.html', **locals())
 
 
@@ -171,4 +173,25 @@ def about():
     blog_info = BlogInfo.query.first()
     about_me_html = blog_info.about_me_html if blog_info else ''
     return render_template('about.html',**locals())
+@bp.route('/post_search')
+@bp.route('/note_search')
+def search():
+    """
+    文章搜索API
+    :return:
+    """
+    page = request.args.get('page', type=int, default=1)
+    limit = request.args.get('limit', type=int, default=5)
+    word = request.args.get('word')
+    current_route = request.url.split('/')[-1].split('_')[0]
+    if current_route == 'note':
+            base_query = Note.query.filter(or_(Note.title.ilike(f"%{word}%"), Note.contend_md.ilike(f"%{word}%")))
+
+    else:
+        base_query = Post.query.filter(or_(Post.title.ilike(f"%{word}%"), Post.contend_md.ilike(f"%{word}%")))
+
+    post_pg = base_query.paginate(page=page, per_page=limit)
+    count = post_pg.total
+
+    return render_template('search.html', **locals())
 

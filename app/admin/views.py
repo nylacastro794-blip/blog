@@ -1,23 +1,61 @@
 import json
-from flask import Blueprint, render_template, request, jsonify,url_for
-from app.admin.models import BlogInfo
+from flask import Blueprint, render_template, request, jsonify, url_for, redirect
+from app.admin.models import BlogInfo, User
 from app.blog.models import Category, Tag, Post,Attachment,Note
-from start import db
+from start import db, csrf
 from start.settings import BASE_DIR
-
+from flask_login import login_user, login_required, logout_user
+from werkzeug.security import check_password_hash
+from start import db, login_manager
 bp = Blueprint('admin',__name__,url_prefix='/qd_admin',template_folder='templates',static_folder='static')
 
 
-@bp.route('/')
+# 加载用户的回调函数
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+@bp.route('/login', methods=['get', 'post'])
 def login():
-    return render_template('admin/index.html',**locals())
+    """
+    后台管理-登录页+校验API
+    :return:
+    """
+    if request.method == 'GET':
+        return render_template('admin/login.html')
+
+    username = request.form['username']
+    password = request.form['password']
+    user = User.query.filter_by(username=username).first()
+    if user and check_password_hash(user.password, password):
+        login_user(user)
+        return redirect(url_for('admin.index'))
+    return '账号或密码错误'
+
+@bp.route('/')
+@login_required
+def index():
+    return render_template('admin/post.html',**locals())
+@bp.route('/logout')
+@login_required
+def logout():
+    """
+    后台管理-退出登录
+    :return:
+    """
+    logout_user()
+    return redirect(url_for('admin.login'))
+
 
 
 
 @bp.route('/post')
+@login_required
 def post():
     return render_template('admin/post.html',**locals())
 @bp.route('/post_query')
+@login_required
 def post_query():
     page = request.args.get('page', type=int, default=1)  # 当前页
     limit = request.args.get('limit', type=int, default=10)  # 一页条数
@@ -43,10 +81,12 @@ def post_query():
     }
     return jsonify(data)
 @bp.route('/category')
+@login_required
 def category():
     return render_template('admin/category.html',**locals())
-
-@bp.route("/add_category", methods=['POST','GET'])
+@csrf.exempt
+@bp.route("/add_category", methods=['POST'])
+@login_required
 def category_add():
     print("数据进来了")
     print(request.form)
@@ -60,6 +100,7 @@ def category_add():
     return "existed"
 
 @bp.route("/category_query")
+@login_required
 def category_query():
     page = request.args.get('page',type=int,default=1)
     limit = request.args.get('limit',type=int,default=5)
@@ -83,12 +124,15 @@ def category_query():
         "data":category_list
     }
     return jsonify(data)
+
 @bp.route('/tag')
+@login_required
 def tag():
     return render_template('admin/tag.html',**locals())
 
-
+@csrf.exempt
 @bp.route('/tag_add', methods=['post'])
+@login_required
 def tag_add():
     """
     标签管理-新增标签API
@@ -108,6 +152,7 @@ def tag_add():
 
 
 @bp.route('/tag_query')
+@login_required
 def tag_query():
     page = request.args.get('page', type=int, default=1)
     limit = request.args.get('limit', type=int, default=5)
@@ -133,6 +178,7 @@ def tag_query():
     }
     return jsonify(data)
 @bp.route('/editor_post')
+@login_required
 def editor_post():
     """
     文章管理-编辑文章页
@@ -141,7 +187,9 @@ def editor_post():
     category_list = Category.query.all()
     tag_list = Tag.query.all()
     return render_template('admin/editor_post.html',**locals())
+@csrf.exempt
 @bp.route('/post_add', methods=['post'])
+@login_required
 def post_add():
     """
     文章管理-新增文章API
@@ -165,8 +213,9 @@ def post_add():
     db.session.add(post_obj)
     db.session.commit()
     return 'success'
-
+@csrf.exempt
 @bp.route('/upload', methods=['post'])
+@login_required
 def upload():
     """
     文章管理-资源上传API
@@ -182,6 +231,7 @@ def upload():
     db.session.commit()
     return {'id': attachment.id, 'url': url_for('blog.static', filename=f'upload/{name}')}
 @bp.route('/about')
+@login_required
 def about():
     """
     关于管理-首页
@@ -192,7 +242,9 @@ def about():
         about_me_mk = blog_info.about_me_mk
         about_me_html= blog_info.about_me_html
     return render_template('admin/about.html', **locals())
+@csrf.exempt
 @bp.route('/about_add', methods=['post'])
+@login_required
 def about_add():
     """
     关于管理-添加API
@@ -214,6 +266,7 @@ def about_add():
     db.session.commit()
     return 'success'
 @bp.route('/note')
+@login_required
 def note():
     """
     笔记管理-首页
@@ -221,6 +274,7 @@ def note():
     """
     return render_template('admin/note.html',**locals())
 @bp.route('/editor_note')
+@login_required
 def editor_note():
     """
     笔记管理-编辑笔记页
@@ -230,6 +284,7 @@ def editor_note():
     tag_list = Tag.query.all()
     return render_template('admin/editor_note.html', **locals())
 @bp.route('/note_query')
+@login_required
 def note_query():
     """
     笔记管理-查询笔记API
@@ -258,7 +313,9 @@ def note_query():
         'msg': ''
     }
     return jsonify(data)
+@csrf.exempt
 @bp.route('/note_add', methods=['post'])
+@login_required
 def note_add():
     form_data = request.form
     tags = json.loads(form_data['tags'])
@@ -275,4 +332,18 @@ def note_add():
     db.session.add(note_obj)
     db.session.commit()
     return 'success'
+from werkzeug.security import generate_password_hash
 
+# @bp.route('/register')
+# def register():
+#     """
+#     用户注册临时API
+#     :return:
+#     """
+#     username = 'admin'
+#     password = '123456'
+#     password_hash = generate_password_hash(password, method='pbkdf2:sha256:600000')
+#     user = User(username=username, password=password_hash)
+#     db.session.add(user)
+#     db.session.commit()
+#     return 'ok'

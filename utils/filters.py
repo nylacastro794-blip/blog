@@ -16,9 +16,11 @@ def address(data):
     list_ = data.split('|')
     return list_[2] + ' ' + list_[3]
 def remove_html_tags(data):
-    # 中国|0|湖南省|长沙市|联通
+    # 去掉 HTML 标签；数据为空时返回空串，避免 re.sub 收到 None
+    if not data:
+        return ''
     clean = re.compile('<.*?>')
-    clear_data = re.sub(clean, '', data)
+    clear_data = re.sub(clean, '', str(data))
     return clear_data
 
 
