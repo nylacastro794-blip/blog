@@ -164,8 +164,33 @@ body::after {
     padding: 5px 0;
 }
 
-.side-categorys ul span {
-    float: right;
+.side-categorys ul li a {
+    display: flex;
+    align-items: center;
+    color: #666;
+    transition: color .2s;
+}
+
+.side-categorys ul li a:hover {
+    color: #227eaa;
+}
+
+.side-categorys ul li .layui-icon {
+    margin-right: 8px;
+}
+
+.side-text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.side-empty {
+    color: #999;
+    font-size: 13px;
+    text-align: center;
 }
 .side-title {
     border-bottom: 1px solid #eee;
@@ -188,8 +213,23 @@ body::after {
     box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
 }
 
-.side-newposts a {
-    word-break: break-all;
+.side-newposts ul li {
+    padding: 5px 0;
+}
+
+.side-newposts ul li a {
+    display: flex;
+    align-items: center;
+    color: #666;
+    transition: color .2s;
+}
+
+.side-newposts ul li a:hover {
+    color: #227eaa;
+}
+
+.side-newposts ul li .layui-icon {
+    margin-right: 8px;
 }
 .side-tags {
     background-color: #fff;
@@ -204,10 +244,24 @@ body::after {
 }
 
 .side-tags div a {
-    margin: 0 0 5px 0 !important;
+    margin: 0 5px 5px 0 !important;
     white-space: nowrap; /*文本不换行*/
     text-overflow: ellipsis;
     overflow: hidden
+}
+
+.filter-tip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 0;
+    padding: 12px 20px;
+    color: #666;
+}
+
+.filter-tip .filter-count {
+    color: #999;
+    font-size: 13px;
 }
 .post-card {
     background-color: #fff;

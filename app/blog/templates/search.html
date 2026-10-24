@@ -5,6 +5,12 @@
         <div class="layui-row layui-col-space15">
             {# 中心区内容 #}
             <div class="layui-col-md9">
+                {% if filter_name %}
+                    <div class="post-card filter-tip">
+                        <span>{{ filter_kind }}：{{ filter_name }}</span>
+                        <span class="filter-count">共 {{ count }} 篇</span>
+                    </div>
+                {% endif %}
                 {% for post in post_pg %}
                     <div class="post-card">
                         <h2><a style="color: #227eaa;"
@@ -17,7 +23,10 @@
                         </span>
                             <span>
                             <i class="layui-icon">&#xe705;</i>
-                            <a href="#" class="category">{{ post.category.name }}</a>
+                            {% if post.category %}
+                                <a href="{{ url_for('blog.category_posts', category_id=post.category.id) }}"
+                                   class="category">{{ post.category.name }}</a>
+                            {% endif %}
                         </span>
                             <span>
                             <i class="layui-icon">&#xe68d;</i>
@@ -31,6 +40,10 @@
                             <a href="{{ url_for('blog.post', post_id=post.id) }}" class="detail">阅读全文</a>
                         </span>
                         </div>
+                    </div>
+                {% else %}
+                    <div class="post-card">
+                        <p style="color: #999; text-align: center;">暂无相关文章</p>
                     </div>
                 {% endfor %}
                 <div id="demo-laypage-theme-1"></div>
@@ -56,9 +69,13 @@
                 jump: (obj, first) => {
                     // 首次不执行
                     if (!first) {
-                        let word = '{{ word }}'
-                        let route = '{{ current_route }}'
-                        window.location.href = `/blog/post_search?word=${word}&page=${obj.curr}`
+                        {% if page_url %}
+                            window.location.href = '{{ page_url }}?page=' + obj.curr;
+                        {% else %}
+                            let word = '{{ word }}'
+                            let route = '{{ current_route }}'
+                            window.location.href = `/blog/post_search?word=${word}&page=${obj.curr}`
+                        {% endif %}
                     }
                 }
             });

@@ -23,7 +23,9 @@
                                 <span>云龙</span>
                             </span><span>
                                 <i class="layui-icon">&#xe705;</i>
-                                <span>{{ post.category.name }}</span>
+                                {% if post.category %}
+                                    <a href="{{ url_for('blog.category_posts', category_id=post.category.id) }}">{{ post.category.name }}</a>
+                                {% endif %}
                             </span><span>
                                 <i class="layui-icon">&#xe68d;</i>
                                 <span>{{ post.add_time | strftime }}</span>
@@ -36,8 +38,9 @@
                         <span>
                                 {% if post.tags %}
                                     {% for tag in post.tags %}
-                                        <a class='layui-btn layui-btn-xs layui-btn-primary' href='#'
-                                           style="color: {{ tag.color }}; margin-left: 4px; margin-bottom:2px">{{ tag.name }}</a>
+                                        <a class='layui-btn layui-btn-xs layui-btn-primary'
+                                           href="{{ url_for('blog.tag_posts', tag_id=tag.id) }}"
+                                           style="color: {{ tag.color or '#5f9ea0' }}; margin-left: 4px; margin-bottom:2px">{{ tag.name }}</a>
                                     {% endfor %}
 
                                 {% endif %}
@@ -71,13 +74,7 @@
                 </div>
             </div>
             <div class="layui-col-md3">
-                <div>
-                    {% include "common/models/search.html" %}
-                    {% include "common/models/my_info.html" %}
-                    {% include "common/models/categorys.html" %}
-                    {% include "common/models/recent_posts.html" %}
-                    {% include "common/models/tags.html" %}
-                </div>
+                {% include 'common/sidebar.html' %}
             </div>
         </div>
     </div>

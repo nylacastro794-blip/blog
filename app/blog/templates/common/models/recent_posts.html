@@ -3,19 +3,17 @@
         <i class="layui-icon">&#xe663;</i>
         最新文章
     </h3>
-    <ul class="layui-row layui-col-space5">
+    <ul>
         <!-- 显示5篇最新文章 -->
-        <li class="layui-col-md12 layui-col-xs6">
-            <i class="layui-icon">&#xe60a;</i>
-            Flask个人博客实战
-        </li>
-        <li class="layui-col-md12 layui-col-xs6">
-            <i class="layui-icon">&#xe60a;</i>
-            Django简易聊天
-        </li>
-        <li class="layui-col-md12 layui-col-xs6">
-            <i class="layui-icon">&#xe60a;</i>
-            P2接口加密通信协议详解
-        </li>
+        {% for post in sidebar_recent_posts %}
+            <li>
+                <a href="{{ url_for('blog.post', post_id=post.id) }}" title="{{ post.title }}">
+                    <i class="layui-icon">&#xe60a;</i>
+                    <span class="side-text">{{ post.title }}</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="side-empty">暂无文章</li>
+        {% endfor %}
     </ul>
 </div>

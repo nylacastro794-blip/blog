@@ -18,7 +18,10 @@
                         </span>
                                 <span>
                             <i class="layui-icon">&#xe705;</i>
-                            <a href="#" class="category">{{ post.category.name }}</a>
+                            {% if post.category %}
+                                <a href="{{ url_for('blog.category_posts', category_id=post.category.id) }}"
+                                   class="category">{{ post.category.name }}</a>
+                            {% endif %}
                         </span>
                                 <span>
                             <i class="layui-icon">&#xe68d;</i>

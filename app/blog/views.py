@@ -1,11 +1,37 @@
-from flask import Blueprint, render_template, request
-from app.blog.models import Post, Comment, Message,Note
-from sqlalchemy import or_
+from flask import Blueprint, render_template, request, url_for, has_request_context
+from app.blog.models import Post, Comment, Message, Note, Category, Tag
+from sqlalchemy import or_, func
 from start import db
 from ..admin.models import BlogInfo
 from .static.ip2region import search_with_file
 
 bp = Blueprint("blog", __name__, url_prefix="/blog", static_folder="static", template_folder="templates")
+
+
+@bp.app_context_processor
+def inject_sidebar_data():
+    """为博客前台模板注入侧边栏数据"""
+    # 后台页面不需要侧边栏数据
+    if has_request_context() and request.blueprint == 'admin':
+        return {}
+
+    # 每个分类下的文章数量
+    category_rows = (
+        db.session.query(Category, func.count(Post.id))
+        .outerjoin(Post, Post.category_id == Category.id)
+        .group_by(Category.id)
+        .order_by(Category.id)
+        .all()
+    )
+    sidebar_categories = [
+        {'id': category.id, 'name': category.name, 'count': count}
+        for category, count in category_rows
+    ]
+    return {
+        'sidebar_categories': sidebar_categories,
+        'sidebar_recent_posts': Post.query.order_by(Post.add_time.desc()).limit(5).all(),
+        'sidebar_tags': Tag.query.order_by(Tag.id).all(),
+    }
 
 
 # 因为在初始化文件中注册了首页路由，这里的路由规则就不适用了
@@ -55,6 +81,36 @@ def post(post_id):
         }
         all_comments.append(comment_data)
     return render_template("post.html", **locals())
+
+
+@bp.route('/category/<int:category_id>')
+def category_posts(category_id):
+    """按分类筛选文章"""
+    page = request.args.get('page', type=int, default=1)
+    limit = request.args.get('limit', type=int, default=5)
+    category = Category.query.get_or_404(category_id)
+    post_pg = Post.query.filter_by(category_id=category_id).order_by(Post.add_time.desc()).paginate(page=page,
+                                                                                                    per_page=limit)
+    count = post_pg.total
+    filter_kind = '分类'
+    filter_name = category.name
+    page_url = url_for('blog.category_posts', category_id=category_id)
+    return render_template('search.html', **locals())
+
+
+@bp.route('/tag/<int:tag_id>')
+def tag_posts(tag_id):
+    """按标签筛选文章"""
+    page = request.args.get('page', type=int, default=1)
+    limit = request.args.get('limit', type=int, default=5)
+    tag = Tag.query.get_or_404(tag_id)
+    post_pg = Post.query.filter(Post.tags.any(id=tag_id)).order_by(Post.add_time.desc()).paginate(page=page,
+                                                                                                 per_page=limit)
+    count = post_pg.total
+    filter_kind = '标签'
+    filter_name = tag.name
+    page_url = url_for('blog.tag_posts', tag_id=tag_id)
+    return render_template('search.html', **locals())
 
 
 def get_replies(comment_id, reply_target_name):
